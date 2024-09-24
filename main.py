@@ -53,12 +53,12 @@ def trocar_ip():
 def modo_beast():
     def worker():
         while True:
-            time.sleep(0.01)
+            time.sleep(0.5)
             trocar_user_agent()
             trocar_ip()
 
     threads = []
-    for _ in range(10):
+    for _ in range(2):
         thread = threading.Thread(target=worker)
         thread.start()
         threads.append(thread)
