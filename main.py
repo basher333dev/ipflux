@@ -40,7 +40,7 @@ def trocar_ip():
     os.system('service tor reload')
     print(f'\033[1;32m[+] Novo IP: {ip_atual()}\033[0m')
 
-def modo_beast(intervalo_base):
+def modo_beast():
     while True:
         time.sleep(0.001)
         trocar_user_agent()
@@ -66,7 +66,7 @@ def main():
 
     beast_mode = input("Beast Mode? (y/n/i): ").strip().lower()
     if beast_mode == "y":
-        threading.Thread(target=modo_beast, args=(60,)).start()
+        threading.Thread(target=modo_beast).start()
     elif beast_mode == "n":
         intervalo_base = int(input("\033[1;33m[+] Intervalo entre trocas de IP (segundos) [60]: \033[0m") or 60)
         vezes = input("\033[1;33m[+] Quantas trocas? (Enter para infinito): \033[0m") or "0"
