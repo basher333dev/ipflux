@@ -23,7 +23,7 @@ def atualizar_script(force_update):
                 file.write(novo_conteudo)
             print(f'[+] {local_file} atualizado com sucesso.')
         else:
-            print(f'[+] {local_file} já está atualizado. // Dica: Use python3 update.py para forçar uma atualização')
+            print(f'[+] {local_file} já está atualizado. // Dica: Use python3 update.py -f para forçar uma atualização')
     
     except requests.RequestException as e:
         print(f'[!] Erro ao acessar o repositório: {e}')
