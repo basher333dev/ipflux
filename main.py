@@ -1,11 +1,22 @@
-import time
 import os
 import subprocess
+import time
 import random
 import requests
 import threading
+import sys
 
-subprocess.run(['python3', 'update.py'])
+def verificar_administrador():
+    if os.name == 'nt':  # Windows
+        if not ctypes.windll.shell32.IsUserAnAdmin():
+            print("Este script deve ser executado como Administrador.")
+            input("Pressione Enter para sair...")
+            sys.exit()
+    else:  # Unix/Linux
+        if os.geteuid() != 0:
+            print("Este script deve ser executado como sudo.")
+            input("Pressione Enter para sair...")
+            sys.exit()
 
 def instalar_dependencias():
     try:
@@ -40,10 +51,20 @@ def trocar_ip():
     print(f'\033[1;32m[+] Novo IP: {ip_atual()}\033[0m')
 
 def modo_beast():
-    while True:
-        time.sleep(0.001)
-        trocar_user_agent()
-        trocar_ip()
+    def worker():
+        while True:
+            time.sleep(0.001)
+            trocar_user_agent()
+            trocar_ip()
+
+    threads = []
+    for _ in range(200):
+        thread = threading.Thread(target=worker)
+        thread.start()
+        threads.append(thread)
+
+    for thread in threads:
+        thread.join()
 
 def main():
     os.system('clear')
@@ -60,12 +81,13 @@ def main():
                   IP Changer
     ''' + '\033[0m')
 
+    verificar_administrador()
     instalar_dependencias()
     os.system('service tor start')
 
     beast_mode = input("Beast Mode? (y/n/i): ").strip().lower()
     if beast_mode == "y":
-        threading.Thread(target=modo_beast).start()
+        modo_beast()
     elif beast_mode == "n":
         intervalo_base = int(input("\033[1;33m[+] Intervalo entre trocas de IP (segundos) [60]: \033[0m") or 60)
         vezes = input("\033[1;33m[+] Quantas trocas? (Enter para infinito): \033[0m") or "0"
