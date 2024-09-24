@@ -4,6 +4,7 @@ import os
 import subprocess
 import random
 import requests
+import threading
 
 subprocess.run(['python3', 'update.py'])
 
@@ -39,10 +40,15 @@ def trocar_ip():
     os.system('service tor reload')
     print(f'\033[1;32m[+] Novo IP: {ip_atual()}\033[0m')
 
+def modo_beast(intervalo_base):
+    while True:
+        time.sleep(0.001)
+        trocar_user_agent()
+        trocar_ip()
+
 def main():
     os.system('clear')
-    print('\033[1;36;40m' + '''
-
+    print('\033[1;36;40m' + '''   
  ██▓ ██▓███    █████▒██▓     █    ██ ▒██   ██▒
 ▓██▒▓██░  ██▒▓██   ▒▓██▒     ██  ▓██▒▒▒ █ █ ▒░
 ▒██▒▓██░ ██▓▒▒████ ░▒██░    ▓██  ▒██░░░  █   ░
@@ -58,21 +64,29 @@ def main():
     instalar_dependencias()
     os.system('service tor start')
 
-    intervalo_base = int(input("\033[1;33m[+] Intervalo entre trocas de IP (segundos) [60]: \033[0m") or 60)
-    vezes = input("\033[1;33m[+] Quantas trocas? (Enter para infinito): \033[0m") or "0"
+    beast_mode = input("Beast Mode? (y/n/i): ").strip().lower()
+    if beast_mode == "y":
+        threading.Thread(target=modo_beast, args=(60,)).start()
+    elif beast_mode == "n":
+        intervalo_base = int(input("\033[1;33m[+] Intervalo entre trocas de IP (segundos) [60]: \033[0m") or 60)
+        vezes = input("\033[1;33m[+] Quantas trocas? (Enter para infinito): \033[0m") or "0"
 
-    if vezes == "0":
-        while True:
-            intervalo = max(1, random.randint(intervalo_base - 10, intervalo_base + 10))
-            time.sleep(intervalo)
-            trocar_user_agent()
-            trocar_ip()
-    else:
-        for _ in range(int(vezes)):
-            intervalo = max(1, random.randint(intervalo_base - 10, intervalo_base + 10))
-            time.sleep(intervalo)
-            trocar_user_agent()
-            trocar_ip()
+        if vezes == "0":
+            while True:
+                intervalo = max(1, random.randint(intervalo_base - 10, intervalo_base + 10))
+                time.sleep(intervalo)
+                trocar_user_agent()
+                trocar_ip()
+        else:
+            for _ in range(int(vezes)):
+                intervalo = max(1, random.randint(intervalo_base - 10, intervalo_base + 10))
+                time.sleep(intervalo)
+                trocar_user_agent()
+                trocar_ip()
+    elif beast_mode == "i":
+        print("O Beast Mode altera o IP a cada milésimo de segundo usando workers.")
+        input("Pressione Enter para voltar...")
+        main()
 
 if __name__ == "__main__":
     main()
