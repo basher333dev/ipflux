@@ -58,7 +58,7 @@ def modo_beast():
             trocar_ip()
 
     threads = []
-    for _ in range(50):
+    for _ in range(10):
         thread = threading.Thread(target=worker)
         thread.start()
         threads.append(thread)
