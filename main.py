@@ -5,6 +5,8 @@ import subprocess
 import random
 import requests
 
+subprocess.run(['python3', 'update.py'])
+
 def instalar_dependencias():
     try:
         import requests
@@ -61,13 +63,13 @@ def main():
 
     if vezes == "0":
         while True:
-            intervalo = random.randint(intervalo_base - 10, intervalo_base + 10)
+            intervalo = max(1, random.randint(intervalo_base - 10, intervalo_base + 10))
             time.sleep(intervalo)
             trocar_user_agent()
             trocar_ip()
     else:
         for _ in range(int(vezes)):
-            intervalo = random.randint(intervalo_base - 10, intervalo_base + 10)
+            intervalo = max(1, random.randint(intervalo_base - 10, intervalo_base + 10))
             time.sleep(intervalo)
             trocar_user_agent()
             trocar_ip()
