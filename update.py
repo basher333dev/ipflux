@@ -1,7 +1,8 @@
 import requests
 import os
+import sys
 
-def atualizar_script():
+def atualizar_script(force_update):
     local_file = 'main.py'
     url = 'https://raw.githubusercontent.com/basher333dev/ipflux/refs/heads/main/main.py'
     
@@ -17,7 +18,7 @@ def atualizar_script():
         else:
             conteudo_local = ''
 
-        if conteudo_local != novo_conteudo:
+        if force_update or conteudo_local != novo_conteudo:
             with open(local_file, 'w') as file:
                 file.write(novo_conteudo)
             print(f'[+] {local_file} atualizado com sucesso.')
@@ -30,4 +31,5 @@ def atualizar_script():
         print(f'[!] Ocorreu um erro: {e}')
 
 if __name__ == "__main__":
-    atualizar_script()
+    force_update = '-f' in sys.argv
+    atualizar_script(force_update)
