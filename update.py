@@ -9,10 +9,13 @@ def atualizar_script():
         response = requests.get(url)
         response.raise_for_status()
         
-        novo_conteudo = response.text
+        novo_conteudo = response.text.strip()  # Remover espaços em branco e quebras de linha no final
 
-        with open(local_file, 'r') as file:
-            conteudo_local = file.read()
+        if os.path.exists(local_file):
+            with open(local_file, 'r') as file:
+                conteudo_local = file.read().strip()  # Remover espaços em branco e quebras de linha no final
+        else:
+            conteudo_local = ''  # Se o arquivo não existe, consideramos que está vazio
 
         if conteudo_local != novo_conteudo:
             with open(local_file, 'w') as file:
